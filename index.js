@@ -1,46 +1,39 @@
-MongoClient.connect(url, { useUnifiedTopology: true }).then(client => {
+const mongoose = require('mongoose');
+const Campsite = require('./models/campsite');
 
-  console.log('Connected correctly to server');
+const url = 'mongodb://localhost:27017/nucampsite';
+const connect = mongoose.connect(url, {
+    useCreateIndex: true,
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
 
-  const db = client.db(dbname);
+connect.then(() => {
 
-  db.dropCollection('campsites')
-  .then(result => {
-      console.log('Dropped Collection:', result);
-  })
-  .catch(err => console.log('No collection to drop.'));
+    console.log('Connected correctly to server');
 
-  dboper.insertDocument(db, {name: "Breadcrumb Trail Campground", description: "Test"}, 'campsites')
-  .then(result => {
-      console.log('Insert Document:', result.ops);
+    const newCampsite = new Campsite({
+        name: 'React Lake Campground',
+        description: 'test'
+    });
 
-      return dboper.findDocuments(db, 'campsites');
-  })
-  .then(docs => {
-      console.log('Found Documents:', docs);
+    newCampsite.save()
+    .then(campsite => {
+        console.log(campsite);
+        return Campsite.find();
+    })
+    .then(campsites => {
+        console.log(campsites);
+        return Campsite.deleteMany();
+    })
+    .then(() => {
+        return mongoose.connection.close();
+    })
+    .catch(err => {
+        console.log(err);
+        mongoose.connection.close();
+    });
+});
 
-      return dboper.updateDocument(db, { name: "Breadcrumb Trail Campground" },
-          { description: "Updated Test Description" }, 'campsites');
-  })
-  .then(result => {
-      console.log('Updated Document Count:', result.result.nModified);
 
-      return dboper.findDocuments(db, 'campsites');
-  })
-  .then(docs => {
-      console.log('Found Documents:', docs);
-
-      return dboper.removeDocument(db, { name: "Breadcrumb Trail Campground" },
-          'campsites');
-  })
-  .then(result => {
-      console.log('Deleted Document Count:', result.deletedCount);
-
-      return client.close();
-  })
-  .catch(err => {
-      console.log(err);
-      client.close();
-  });
-})
-.catch(err => console.log(err));
+Make sure that yo
