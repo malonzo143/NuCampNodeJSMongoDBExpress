@@ -1,13 +1,13 @@
 {
-  "name": "node-express",
+  "name": "node-mongo",
   "version": "1.0.0",
-  "description": "Node Express Examples",
-  "main": "server.js",
+  "description": "Node MongoDB Example",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server"
+    "start": "node index"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "mongodb": "^3.6.2"
   }
 }
