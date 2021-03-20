@@ -1,20 +1,16 @@
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use(passport.initialize());
+app.use(passport.session());
+const passport = require('passport');
+const authenticate = require('./authenticate');
 
 function auth(req, res, next) {
-    console.log(req.session);
+    console.log(req.user);
 
-    if (!req.session.user) {
-        const err = new Error('You are not authenticated!');
+    if (!req.user) {
+        const err = new Error('You are not authenticated!');                    
         err.status = 401;
         return next(err);
     } else {
-        if (req.session.user === 'authenticated') {
-            return next();
-        } else {
-            const err = new Error('You are not authenticated!');
-            err.status = 401;
-            return next(err);
-        }
+        return next();
     }
 }
